@@ -26,3 +26,10 @@ Route::middleware(['auth'])->group(function () {
    Route::resource('invoices', 'InvoicesController');
     
 });
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
