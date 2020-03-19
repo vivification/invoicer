@@ -18,7 +18,8 @@
 
                     <br><br>
 
-                    <table class="table-responsive">
+                    <div class="table-responsive">
+                        <table class="table">
                         <tr>
                         <th>Invoice Date</th>
                         <th>Invoice Number</th>
@@ -32,12 +33,11 @@
                             <td>{{ $invoice->invoice_number }}</td>
                             <td>{{ $invoice->customer->name }}</td>
                             <td>{{ number_format($invoice->total_amount, 2) }}</td>
-                            {{--<td><a href="{{ route('invoices.show', $invoice->id) }} class=btn btn-info">View Invoice</a></td>--}}
-                            <td><a href="#" class=btn-info>View Invoice</a></td>
+                            <td><a href="{{ route('invoices.show', $invoice->id) }}" class="btn btn-primary">View Invoice</a></td>
                         </tr>
                         @endforeach
                     </table>
-
+                    </div>
                 </div>
             </div>
         </div>
