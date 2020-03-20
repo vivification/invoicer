@@ -7,9 +7,9 @@
             <div class="card">
                 <div class="card-header">Create Invoice</div>
 
-                <form action="{{ route('invoices.store') }}" method="post">
+                <form action="{{ route('invoices.php.store') }}" method="post">
                 @csrf
-                
+
                 <div class="card-body">
                     <div class="container">
                         <div class="row clearfix">
@@ -22,7 +22,7 @@
                                 <input type="text" name='invoice[invoice_date]' class="form-control" value="{{ date('Y-m-d') }}" required />
                             </div>
                         </div>
-    
+
                             <div class="row clearfix" style="margin-top:20px">
                             <div class="col-md-12">
                                 <div class="float-left col-md-6">
@@ -69,7 +69,7 @@
                                 </div>
                             </div>
                         </div>
-    
+
     <div class="row clearfix" style="margin-top: 20px">
     <div class="col-md-12">
       <table class="table table-bordered table-hover" id="tab_logic">
@@ -147,7 +147,7 @@ $(document).ready(function(){
     $("#add_row").click(function(){b=i-1;
       	$('#addr'+i).html($('#addr'+b).html()).find('td:first-child').html(i+1);
       	$('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
-      	i++; 
+      	i++;
   	});
     $("#delete_row").click(function(){
     	if(i>1){
@@ -156,14 +156,14 @@ $(document).ready(function(){
 		}
 		calc();
 	});
-	
+
 	$('#tab_logic tbody').on('keyup change',function(){
 		calc();
 	});
 	$('#tax').on('keyup change',function(){
 		calc_total();
 	});
-	
+
 
 });
 
@@ -176,7 +176,7 @@ function calc()
 			var qty = $(this).find('.qty').val();
 			var price = $(this).find('.price').val();
 			$(this).find('.total').val(qty*price);
-			
+
 			calc_total();
 		}
     });

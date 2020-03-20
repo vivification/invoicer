@@ -20,46 +20,53 @@
                         <div class="row clearfix" style="margin-top:20px">
                             <div class="col-md-12">
                                 <div class="float-left col-md-6">
-                                    Name*: <input type="text" name='customer[name]' class="form-control" required />
-                                    Address*: <input type="text" name='customer[address]' class="form-control" required />
-                                    Postcode/ZIP: <input type="text" name='customer[postcode]' class="form-control" />
-                                    City*: <input type="text" name='customer[city]' class="form-control" required />
-                                    State: <input type="text" name='customer[state]' class="form-control" />
-                                    Country*: <input type="text" name='customer[country]' class="form-control" required />
-                                    Phone: <input type="text" name='customer[phone]' class="form-control" />
-                                    Email: <input type="email" name='customer[email]' class="form-control" />
-                                    <br />
-                                    <b>Additional fields</b> (optional):
-                                    <br />
-                                    <table class="table table-bordered table-hover">
-                                        <tbody>
-                                        <tr>
-                                            <th class="text-center" width="50%">Field</th>
-                                            <th class="text-center">Value</th>
-                                        </tr>
-                                        @for ($i = 0; $i <= 2; $i++)
-                                            <tr>
-                                                <td class="text-center">
-                                                    <input type="text" name='customer_fields[{{ $i }}][field_key]' class="form-control" />
-                                                </td>
-                                                <td class="text-center">
-                                                    <input type="text" name='customer_fields[{{ $i }}][field_value]' class="form-control" />
-                                                </td>
-                                            </tr>
-                                        @endfor
-                                        </tbody>
-                                    </table>
+                                    <b>To</b>:
+                                    {{ $invoice->customer->name }}
+                                    <br /><br />
+
+                                    <b>Address</b>:
+                                    {{ $invoice->customer->address }}
+                                    @if ($invoice->customer->postcode != '')
+                                        ,
+                                        {{ $invoice->customer->postcode }}
+                                    @endif
+                                    , {{ $invoice->customer->city }}
+                                    @if ($invoice->customer->state != '')
+                                        ,
+                                        {{ $invoice->customer->state }}
+                                    @endif
+                                    , {{ $invoice->customer->country }}
+
+                                    @if ($invoice->customer->phone != '')
+                                        <br /><br /><b>Phone</b>: {{ $invoice->customer->phone }}
+                                    @endif
+                                    @if ($invoice->customer->email != '')
+                                        <br /><b>Email</b>: {{ $invoice->customer->email }}
+                                    @endif
+                                    <br>
+                                    @if ($invoice->customer->customer_fields)
+                                        @foreach ($invoice->customer->customer_fields as $field)
+                                            <br /><b>{{ $field->field_key }}</b>: {{ $field->field_value }}
+                                        @endforeach
+                                    @endif
                                 </div>
                                 <div class="float-right col-md-4">
-                                    <b>Seller details</b>:
-                                    <br /><br />
-                                    Your company name
+                                    <b>Seller details:</b>
+                                    <br><br>
+                                    {{ config('invoices.seller.name') }}
                                     <br />
-                                    1 Street Name, London, United Kingdom
-                                    <br />
-                                    Email: xxxxx@company.com
-                                    <br />
-                                    VAT Number: xx xxxxx xxxx
+                                    {{ config('invoices.seller.address') }}
+                                        @if (config('invoices.seller.email') != '')
+                                            <br><br>
+                                            <b>Phone:</b> {{ config('invoices.seller.phone') }} <br>
+                                            <b>Email:</b> {{ config('invoices.seller.email') }}
+                                        @endif
+                                    @if (is_array(config('invoices.seller.additional_info')))
+                                            @foreach (config('invoices.seller.additional_info') as $key => $value)
+                                                <br><br>
+                                                <b>{{ $key  }}</b>: {{ $value }}
+                                            @endforeach
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -77,24 +84,20 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    @foreach ($invoice->invoice_items as $item)
                                     <tr id='addr0'>
-                                        <td>1</td>
-                                        <td><input type="text" name='product[]'  placeholder='Enter Product Name' class="form-control"/></td>
-                                        <td><input type="number" name='qty[]' placeholder='Enter Qty' class="form-control qty" step="0" min="0"/></td>
-                                        <td><input type="number" name='price[]' placeholder='Enter Unit Price' class="form-control price" step="0.00" min="0"/></td>
-                                        <td><input type="number" name='total[]' placeholder='0.00' class="form-control total" readonly/></td>
+                                        <td>{{ $loop->iteration}}</td>
+                                        <td>{{ $item->name }}</td>
+                                        <td>{{ $item->quantity }}</td>
+                                        <td>{{ $item->price }}</td>
+                                        <td>{{ number_format($item->quantity * $item->price, 2) }}</td>
                                     </tr>
-                                    <tr id='addr1'></tr>
+                                    @endforeach
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                        <div class="row clearfix">
-                            <div class="col-md-12">
-                                <button id="add_row" class="btn btn-primary float-left">Add Rows</button>
-                                <button id='delete_row' class="float-right btn btn-danger">Delete Row</button>
-                            </div>
-                        </div>
+
                         <div class="row clearfix" style="margin-top:20px">
                             <div class="col-md-12">
                                 <div class="float-right col-md-6">
@@ -102,22 +105,19 @@
                                         <tbody>
                                         <tr>
                                             <th class="text-center" width="50%">Sub Total</th>
-                                            <td class="text-center"><input type="number" name='sub_total' placeholder='0.00' class="form-control" id="sub_total" readonly/></td>
+                                            <td class="text-center">${{ number_format($invoice->total_amount, 2) }}</td>
                                         </tr>
                                         <tr>
                                             <th class="text-center">Tax</th>
-                                            <td class="text-center"><div class="input-group mb-2 mb-sm-0">
-                                                    <input type="number" class="form-control" id="tax" placeholder="0" name="invoice[tax_percent]">
-                                                    <div class="input-group-addon">%</div>
-                                                </div></td>
+                                            <td class="text-center">{{ $invoice->tax_percent }}%</td>
                                         </tr>
                                         <tr>
                                             <th class="text-center">Tax Amount</th>
-                                            <td class="text-center"><input type="number" name='tax_amount' id="tax_amount" placeholder='0.00' class="form-control" readonly/></td>
+                                            <td class="text-center">${{ $invoice->total_amount * $invoice->tax_percent / 100 }}</td>
                                         </tr>
                                         <tr>
                                             <th class="text-center">Grand Total</th>
-                                            <td class="text-center"><input type="number" name='total_amount' id="total_amount" placeholder='0.00' class="form-control" readonly/></td>
+                                            <td class="text-center">${{ number_format($invoice->total_amount + ($invoice->total_amount * $invoice->tax_percent /100), 2) }}</td>
                                         </tr>
                                         </tbody>
                                     </table>
