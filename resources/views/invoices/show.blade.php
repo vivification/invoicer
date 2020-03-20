@@ -3,17 +3,25 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-10">
             <div class="card">
-                <div class="card-header">Invoice Number {{$invoice->invoice_number}}</div>
+                <b><div class="card-header">Invoice Number {{$invoice->invoice_number}}</div></b>
 
                 <div class="card-body">
                     <div class="container">
                         <div class="row clearfix">
+
+                            @if (config('invoices.logo_file') != '')
+                                <div class="col-md-12 text-center">
+                                    <img src="{{ config('invoices.logo_file') }}" width="25%" />
+                                    <br><br>
+                                </div>
+                            @endif
+
                             <div class="col-md-4 offset-4 text-center">
-                                {{ $invoice->invoice_number }}
+                                <b>Invoice Number:</b> {{ $invoice->invoice_number }}
                                 <br>
-                                {{ $invoice->invoice_date }}
+                                <b>Date Generated:</b> {{ $invoice->invoice_date }}
                             </div>
                         </div>
 
@@ -121,6 +129,11 @@
                                         </tr>
                                         </tbody>
                                     </table>
+                                </div>
+                            </div>
+                            <div class="row clearfix" style="margin-top:20px">
+                                <div class="col-md-12">
+                                    {{ config('invoices.footer_text') }}
                                 </div>
                             </div>
                         </div>
