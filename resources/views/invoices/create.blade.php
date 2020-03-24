@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header">Create Invoice</div>
 
-                <form action="{{ route('invoices.php.store') }}" method="post">
+                <form action="{{ route('invoices.store') }}" method="post">
                 @csrf
 
                 <div class="card-body">
