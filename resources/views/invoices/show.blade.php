@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card">
-                <b><div class="card-header">Invoice Number {{$invoice->invoice_number}}</div></b>
+                <b><div class="card-header">Quote Number {{$invoice->invoice_number}}</div></b>
 
                 <div class="card-body">
                     <div class="container">
@@ -19,7 +19,7 @@
                             @endif
 
                             <div class="col-md-4 offset-4 text-center">
-                                <b>Invoice Number:</b> {{ $invoice->invoice_number }}
+                                <b>Quote Number:</b> {{ $invoice->invoice_number }}
                                 <br>
                                 <b>Date Generated:</b> {{ $invoice->invoice_date }}
                             </div>
@@ -34,20 +34,20 @@
 
                                     <b>Address</b>:
                                     {{ $invoice->customer->address }}
-                                    @if ($invoice->customer->postcode != '')
-                                        ,
-                                        {{ $invoice->customer->postcode }}
-                                    @endif
-                                    , {{ $invoice->customer->city }}
-                                    @if ($invoice->customer->state != '')
-                                        ,
-                                        {{ $invoice->customer->state }}
-                                    @endif
-                                    , {{ $invoice->customer->country }}
+{{--                                    @if ($invoice->customer->postcode != '')--}}
+{{--                                        ,--}}
+{{--                                        {{ $invoice->customer->postcode }}--}}
+{{--                                    @endif--}}
+{{--                                    , {{ $invoice->customer->city }}--}}
+{{--                                    @if ($invoice->customer->state != '')--}}
+{{--                                        ,--}}
+{{--                                        {{ $invoice->customer->state }}--}}
+{{--                                    @endif--}}
+{{--                                    , {{ $invoice->customer->country }}--}}
 
-                                    @if ($invoice->customer->phone != '')
-                                        <br /><br /><b>Phone</b>: {{ $invoice->customer->phone }}
-                                    @endif
+{{--                                    @if ($invoice->customer->phone != '')--}}
+{{--                                        <br /><br /><b>Phone</b>: {{ $invoice->customer->phone }}--}}
+{{--                                    @endif--}}
                                     @if ($invoice->customer->email != '')
                                         <br /><b>Email</b>: {{ $invoice->customer->email }}
                                     @endif
@@ -87,8 +87,8 @@
                                         <th class="text-center"> # </th>
                                         <th class="text-center"> Product </th>
                                         <th class="text-center"> Qty </th>
-                                        <th class="text-center"> Price </th>
-                                        <th class="text-center"> Total </th>
+                                        <th class="text-center"> Price ({{ config('invoices.currency') }})</th>
+                                        <th class="text-center"> Total ({{ config('invoices.currency') }})</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -112,20 +112,20 @@
                                     <table class="table table-bordered table-hover" id="tab_logic_total">
                                         <tbody>
                                         <tr>
-                                            <th class="text-center" width="50%">Sub Total</th>
-                                            <td class="text-center">${{ number_format($invoice->total_amount, 2) }}</td>
+                                            <th class="text-center" width="50%">Sub Total ({{ config('invoices.currency') }})</th>
+                                            <td class="text-center">{{ number_format($invoice->total_amount, 2) }}</td>
                                         </tr>
                                         <tr>
                                             <th class="text-center">Tax</th>
                                             <td class="text-center">{{ $invoice->tax_percent }}%</td>
                                         </tr>
                                         <tr>
-                                            <th class="text-center">Tax Amount</th>
-                                            <td class="text-center">${{ $invoice->total_amount * $invoice->tax_percent / 100 }}</td>
+                                            <th class="text-center">Tax Amount ({{ config('invoices.currency') }})</th>
+                                            <td class="text-center">{{ $invoice->total_amount * $invoice->tax_percent / 100 }}</td>
                                         </tr>
                                         <tr>
-                                            <th class="text-center">Grand Total</th>
-                                            <td class="text-center">${{ number_format($invoice->total_amount + ($invoice->total_amount * $invoice->tax_percent /100), 2) }}</td>
+                                            <th class="text-center">Grand Total ({{ config('invoices.currency') }})</th>
+                                            <td class="text-center">{{ number_format($invoice->total_amount + ($invoice->total_amount * $invoice->tax_percent /100), 2) }}</td>
                                         </tr>
                                         </tbody>
                                     </table>

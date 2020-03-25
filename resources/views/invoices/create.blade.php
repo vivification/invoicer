@@ -16,7 +16,7 @@
                             <div class="col-md-4 offset-4 text-center">
                                 Invoice number*:
                                 <br />
-                                <input type="text" name='invoice[invoice_number]' class="form-control" placeholder="AA001" required />
+                                <input type="text" name='invoice[invoice_number]' class="form-control" placeholder="RTQ00" required />
                                 Invoice date*:
                                 <br />
                                 <input type="text" name='invoice[invoice_date]' class="form-control" value="{{ date('Y-m-d') }}" required />
@@ -26,47 +26,26 @@
                             <div class="row clearfix" style="margin-top:20px">
                             <div class="col-md-12">
                                 <div class="float-left col-md-6">
-                                    Name*: <input type="text" name='customer[name]' class="form-control" required />
-                                    Address*: <input type="text" name='customer[address]' class="form-control" required />
-                                    Postcode/ZIP: <input type="text" name='customer[postcode]' class="form-control" />
-                                    City*: <input type="text" name='customer[city]' class="form-control" required />
-                                    State: <input type="text" name='customer[state]' class="form-control" />
-                                    Country*: <input type="text" name='customer[country]' class="form-control" required />
-                                    Phone: <input type="text" name='customer[phone]' class="form-control" />
-                                    Email: <input type="email" name='customer[email]' class="form-control" />
-                                    <br />
-                                    <b>Additional fields</b> (optional):
-                                    <br />
-                                    <table class="table table-bordered table-hover">
-                                        <tbody>
-                                        <tr>
-                                            <th class="text-center" width="50%">Field</th>
-                                            <th class="text-center">Value</th>
-                                        </tr>
-                                        @for ($i = 0; $i <= 2; $i++)
-                                            <tr>
-                                                <td class="text-center">
-                                                    <input type="text" name='customer_fields[{{ $i }}][field_key]' class="form-control" />
-                                                </td>
-                                                <td class="text-center">
-                                                    <input type="text" name='customer_fields[{{ $i }}][field_value]' class="form-control" />
-                                                </td>
-                                            </tr>
-                                        @endfor
-                                        </tbody>
-                                    </table>
+                                    Customer: {{$customer->name}}
+                                    <input type="hidden" name="invoice[customer_id]" value="{{$customer->id}}">
+                                    <br>
+{{--                                    <select name="invoice[customer_id]" id="">--}}
+{{--                                        @foreach ($customers as $customer)--}}
+{{--                                            <option value="{{ $customer->id }}">{{ $customer->name }}</option>--}}
+{{--                                        @endforeach--}}
+{{--                                    </select>--}}
                                 </div>
-                                <div class="float-right col-md-4">
-                                    <b>Seller details</b>:
-                                    <br /><br />
-                                    Your company name
-                                    <br />
-                                    1 Street Name, London, United Kingdom
-                                    <br />
-                                    Email: xxxxx@company.com
-                                    <br />
-                                    VAT Number: xx xxxxx xxxx
-                                </div>
+{{--                                <div class="float-right col-md-4">--}}
+{{--                                    <b>Seller details</b>:--}}
+{{--                                    <br /><br />--}}
+{{--                                    Your company name--}}
+{{--                                    <br />--}}
+{{--                                    1 Street Name, London, United Kingdom--}}
+{{--                                    <br />--}}
+{{--                                    Email: xxxxx@company.com--}}
+{{--                                    <br />--}}
+{{--                                    VAT Number: xx xxxxx xxxx--}}
+{{--                                </div>--}}
                             </div>
                         </div>
 
@@ -78,14 +57,20 @@
             <th class="text-center"> # </th>
             <th class="text-center"> Product </th>
             <th class="text-center"> Qty </th>
-            <th class="text-center"> Price </th>
+            <th class="text-center"> Price ({{ config('invoices.currency') }}) </th>
             <th class="text-center"> Total </th>
           </tr>
         </thead>
         <tbody>
           <tr id='addr0'>
             <td>1</td>
-            <td><input type="text" name='product[]'  placeholder='Enter Product Name' class="form-control"/></td>
+            <td>
+                <select name="product[]" class="form-control">
+                    @foreach ($products as $product)
+                    <option value="{{ $product->id }}">{{ $product->name }}</option>
+                    @endforeach
+                </select>
+            </td>
             <td><input type="number" name='qty[]' placeholder='Enter Qty' class="form-control qty" step="0" min="0"/></td>
             <td><input type="number" name='price[]' placeholder='Enter Unit Price' class="form-control price" step="0.00" min="0"/></td>
             <td><input type="number" name='total[]' placeholder='0.00' class="form-control total" readonly/></td>
@@ -97,8 +82,8 @@
   </div>
   <div class="row clearfix">
     <div class="col-md-12">
-      <button id="add_row" class="btn btn-primary float-left">Add Rows</button>
-      <button id='delete_row' class="float-right btn btn-danger">Delete Row</button>
+        <button id="add_row" class="btn btn-primary float-left" type="button">Add Rows</button>
+        <button id='delete_row' class="float-right btn btn-danger" type="button">Delete Row</button>
     </div>
   </div>
   <div class="row clearfix" style="margin-top:20px">
@@ -107,22 +92,22 @@
       <table class="table table-bordered table-hover" id="tab_logic_total">
         <tbody>
           <tr>
-            <th class="text-center" width="50%">Sub Total</th>
+            <th class="text-center" width="50%">Sub Total ({{ config('invoices.currency') }})</th>
             <td class="text-center"><input type="number" name='sub_total' placeholder='0.00' class="form-control" id="sub_total" readonly/></td>
           </tr>
           <tr>
             <th class="text-center">Tax</th>
             <td class="text-center"><div class="input-group mb-2 mb-sm-0">
-                <input type="number" class="form-control" id="tax" placeholder="0" name="invoice[tax_percent]">
+                <input type="number" class="form-control" id="tax" placeholder="0" name="invoice[tax_percent]" value="{{ $tax }}">
                 <div class="input-group-addon">%</div>
               </div></td>
           </tr>
           <tr>
-            <th class="text-center">Tax Amount</th>
+            <th class="text-center">Tax Amount ({{ config('invoices.currency') }})</th>
             <td class="text-center"><input type="number" name='tax_amount' id="tax_amount" placeholder='0.00' class="form-control" readonly/></td>
           </tr>
           <tr>
-            <th class="text-center">Grand Total</th>
+            <th class="text-center">Grand Total ({{ config('invoices.currency') }})</th>
             <td class="text-center"><input type="number" name='total_amount' id="total_amount" placeholder='0.00' class="form-control" readonly/></td>
           </tr>
         </tbody>

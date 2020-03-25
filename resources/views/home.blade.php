@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">Dashboard</div>
 
@@ -26,6 +26,7 @@
                         <th>Customer</th>
                             <th>Total Amount</th>
                             <th></th>
+                            <th></th>
                         </tr>
                         @foreach ($invoices as $invoice)
                         <tr>
@@ -34,6 +35,7 @@
                             <td>{{ $invoice->customer->name }}</td>
                             <td>{{ number_format($invoice->total_amount, 2) }}</td>
                             <td><a href="{{ route('invoices.show', $invoice->id) }}" class="btn btn-primary">View Invoice</a></td>
+                            <td><a href="{{ route('invoices.download', $invoice->id) }}" class="btn btn-primary">View PDF</a></td>
                         </tr>
                         @endforeach
                     </table>

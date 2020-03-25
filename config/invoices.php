@@ -12,6 +12,7 @@ return [
         'additional_info'   =>  [
             'ABN Number'    => '71 156 304 148',
             ]
-        ]
+        ],
+    'currency' => '$',
 
 ];
