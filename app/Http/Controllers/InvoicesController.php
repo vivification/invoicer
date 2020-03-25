@@ -7,19 +7,23 @@ use App\Customer;
 use App\Invoice;
 use App\InvoicesItem;
 use App\CustomersField;
+use App\Product;
+use Mpociot\VatCalculator\Facades\VatCalculator;
 
 class InvoicesController extends Controller
 {
-    public function create()
+    public function create(Request $request)
     {
-        return view('invoices.create');
+        $customer = Customer::find($request->customer_id);
+        $tax = 10;
+//        $tax = VatCalculator::getTaxRateForLocation($customer->country->shortcode) * 100;
+        $products = Product::all();
+        return view('invoices.create', compact('tax','products', 'customer'));
     }
 
     public function store(Request $request)
     {
-
-        $customer = Customer::create($request->customer);
-        $invoice = Invoice::create($request->invoice + ['customer_id' => $customer->id]);
+        $invoice = Invoice::create($request->invoice);
 
         for ($i=0; $i < count($request->product); $i++) {
             if (isset($request->qty[$i]) && isset($request->price[$i])){
@@ -32,24 +36,21 @@ class InvoicesController extends Controller
             }
         }
 
-        for ($i=0; $i < count($request->customer_fields); $i++) {
-            if (isset($request->customer_fields[$i]['field_key']) && isset($request->customer_fields[$i]['field_value'])){
-                CustomersField::create([
-                    'customer_id'     => $customer->id,
-                    'field_key'       => $request->customer_fields[$i]['field_key'],
-                    'field_value'     => $request->customer_fields[$i]['field_value'],
-
-                ]);
-            }
-        }
-
-        return 'To be continued';
+        return redirect()->route('home');
     }
 
     public function show($invoice_id)
     {
         $invoice = Invoice::findOrFail($invoice_id);
         return view('invoices.show', compact('invoice'));
+    }
+
+    public function download($invoice_id)
+    {
+        $invoice = Invoice::findOrFail($invoice_id);
+        $pdf     = \PDF::loadView('invoices.pdf', compact('invoice'));
+
+        return $pdf->stream('invoice.pdf');
     }
 
 
