@@ -2,7 +2,7 @@
 
 return [
 
-    'footer_text'       =>  'Invoice must be paid within 30 days.',
+    'footer_text'       =>  'This quote is valid for 30 days.',
     'logo_file'         =>  '/images/logo.png',
     'seller'            => [
         'name'              => 'Retailquip Pty Ltd',

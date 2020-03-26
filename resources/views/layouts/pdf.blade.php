@@ -6,7 +6,9 @@
     <style>
         body {
             background: inherit;
-            font-size: 14px;
+            font-size: 12px;
+            line-height: 1.0;
+
         },
         .tbl-total {
             width: inherit;

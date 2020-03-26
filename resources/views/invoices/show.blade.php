@@ -81,6 +81,13 @@
 
                         <div class="row clearfix" style="margin-top: 20px">
                             <div class="col-md-12">
+                            <div class="float-left col-md-6">
+                                <b>Job/Work Description</b>:
+                                {{ $invoice->job_description }}
+                                <br /><br />
+                            </div>
+                            </div>
+                            <div class="col-md-12">
                                 <table class="table table-bordered table-hover" id="tab_logic">
                                     <thead>
                                     <tr>

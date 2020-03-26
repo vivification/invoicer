@@ -5,13 +5,20 @@
         @if (config('invoices.logo_file') != '')
             <div class="text-center">
                 <img src="{{ asset(config('invoices.logo_file')) }}" width="25%"/>
+                <br>
+                <br>
+                @if (is_array(config('invoices.seller.additional_info')))
+                    @foreach (config('invoices.seller.additional_info') as $key => $value)
+                        <b>{{ $key }}</b>: {{ $value }}
+                    @endforeach
+                @endif
             </div>
         @endif
 
         <div class="text-center">
-            <b>Invoice {{ $invoice->invoice_number }}</b>
+            <b>Quote Number: {{ $invoice->invoice_number }}</b>
             <br>
-            {{ $invoice->invoice_date }}
+            <b>Quote Date: {{ $invoice->invoice_date }}</b>
         </div>
     </div>
 
@@ -19,8 +26,7 @@
         <div class="float-left">
             <b>To</b>:
             {{ $invoice->customer->name }}
-            <br /><br />
-
+            <br>
             <b>Address</b>:
             {{ $invoice->customer->address }}
 {{--            @if ($invoice->customer->postcode != '')--}}
@@ -50,22 +56,25 @@
 
         <div class="float-right">
             <b>From</b>: {{ config('invoices.seller.name') }}
-            <br /><br />
+            <br>
             <b>Address</b>: {{ config('invoices.seller.address') }}
+            <br>
             @if (config('invoices.seller.email') != '')
-                <br /><br />
                 <b>Email</b>: {{ config('invoices.seller.email') }}
-            @endif
-            @if (is_array(config('invoices.seller.additional_info')))
-                @foreach (config('invoices.seller.additional_info') as $key => $value)
-                    <br /><br />
-                    <b>{{ $key }}</b>: {{ $value }}
-                @endforeach
             @endif
         </div>
     </div>
 
+    <div class="col-md-12">
+        <div class="float-left col-md-6">
+            <b>Job/Work Description</b>:
+            {{ $invoice->job_description }}
+            <br /><br />
+        </div>
+    </div>
+
     <div class="clearfix mt-3">
+        <br><br><br>
         <table class="table table-bordered">
             <thead>
             <tr>
@@ -91,7 +100,7 @@
     </div>
 
 
-    <div class="clearfix mt-3">
+    <div class="clearfix mt-6">
         <table class="float-right table tbl-total">
             <tbody>
             @if ($invoice->tax_percent > 0)

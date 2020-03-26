@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">Create Invoice</div>
 
@@ -14,10 +14,10 @@
                     <div class="container">
                         <div class="row clearfix">
                             <div class="col-md-4 offset-4 text-center">
-                                Invoice number*:
+                                Quote number*:
                                 <br />
                                 <input type="text" name='invoice[invoice_number]' class="form-control" placeholder="RTQ00" required />
-                                Invoice date*:
+                                Quote date*:
                                 <br />
                                 <input type="text" name='invoice[invoice_date]' class="form-control" value="{{ date('Y-m-d') }}" required />
                             </div>
@@ -51,6 +51,11 @@
 
     <div class="row clearfix" style="margin-top: 20px">
     <div class="col-md-12">
+        <div class="col-md-8">
+        Job or Work Description:
+            <input type="text" name='invoice[job_description]' class="form-control">
+            <br>
+        </div>
       <table class="table table-bordered table-hover" id="tab_logic">
         <thead>
           <tr>
@@ -98,7 +103,7 @@
           <tr>
             <th class="text-center">Tax</th>
             <td class="text-center"><div class="input-group mb-2 mb-sm-0">
-                <input type="number" class="form-control" id="tax" placeholder="0" name="invoice[tax_percent]" value="{{ $tax }}">
+                <input type="number" class="form-control" id="tax" placeholder="0" name="invoice[tax_percent]" value="{{ $tax }}" readonly>
                 <div class="input-group-addon">%</div>
               </div></td>
           </tr>
@@ -116,7 +121,7 @@
       </div>
         </div>
             </div>
-                <input type="submit" class="btn btn-primary" value="Save Invoice" />
+                <input type="submit" class="btn btn-primary" value="Save Quote" />
                 </div>
             </div>
     </form>
